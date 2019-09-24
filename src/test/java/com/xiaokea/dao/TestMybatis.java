@@ -5,12 +5,11 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class TestMybatis {
 
 //    private InputStream in;
 //    private SqlSession sqlSession;
-//    private BaseDao userDao;
+//    private IUserDao userDao;
 //
 //    @Before
 //    public void init() throws IOException {
@@ -36,7 +35,7 @@ public class TestMybatis {
 //        //4. 使用动态代理  // 生产SqlSession使用了工厂模式，
 //        sqlSession = factory.openSession();
 //        // 创建Dao接口实现类，使用了代理模式，指的是，在不修改源码的基础上，对已有方法增强
-//        userDao = sqlSession.getMapper(BaseDao.class);
+//        userDao = sqlSession.getMapper(IUserDao.class);
 //    }
 //
 //    @After
@@ -52,8 +51,9 @@ public class TestMybatis {
     public void testUserDao() throws IOException {
         InputStream in = Resources.getResourceAsStream("mybatis-conf.xml");
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(in);
+
         SqlSession sqlSession = factory.openSession();
-        BaseDao userDao = sqlSession.getMapper(BaseDao.class);
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
         User user = new User();
         user.setName("admin");
@@ -62,5 +62,25 @@ public class TestMybatis {
         for (User user1 : userList) {
             System.out.println(user1);
         }
+    }
+
+    @Test
+    public void testInsert() throws IOException {
+        InputStream in = Resources.getResourceAsStream("mybatis-conf.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(in);
+
+        SqlSession sqlSession = factory.openSession();
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        User user = new User();
+        user.setUid(12);
+        user.setName("hello");
+        user.setPassword("123456");
+        user.setRegtime(new Date().toLocaleString());
+        userDao.insert(user);
+
+        sqlSession.commit();
+        sqlSession.close();
+        in.close();
+
     }
 }

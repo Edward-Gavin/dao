@@ -3,10 +3,31 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+
+    <!-- 引入外部配置文件 -->
+    <properties resource="jdbcConfig.properties"></properties>
+
+
+    <!-- 配置别名 -->
     <typeAliases>
-        <typeAlias type="com.xiaokea.domain.User" alias="_user"/>
+        <package name="com.xiaokea.domain"></package>
     </typeAliases>
+
+    <!-- 配置环境 -->
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 指定带有注解的Dao接口的位置 -->
     <mappers>
-        <mapper resource="UserMapper.xml"/>
+        <package name="com.xiaokea.dao"></package>
     </mappers>
 </configuration>

@@ -13,6 +13,9 @@
     <title>注册测试</title>
 </head>
 <body>
+<c:if test="${sessionScope.wareReg != null}">
+    <h2 color="red" align="center"><c:out value="${sessionScope.wareReg}" /></h2>
+</c:if>
 <table style="margin:20% auto;border:1px solid red;">
     <form action='<c:url value="/doReg" />' method="post">
         <tr>

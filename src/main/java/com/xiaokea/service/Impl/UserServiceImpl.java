@@ -1,7 +1,7 @@
 package com.xiaokea.service.Impl;
 
 
-import com.xiaokea.dao.UserDao;
+import com.xiaokea.dao.Impl.UserDaoImpl;
 import com.xiaokea.domain.User;
 import com.xiaokea.service.UserService;
 import org.springframework.stereotype.Service;
@@ -16,30 +16,30 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Resource(name = "userDao")
-    private UserDao userDao;
+    @Resource(name = "userDaoImpl")
+    private UserDaoImpl userDaoImpl;
 
     public int insert(User user) {
-        return userDao.insert(user);
+        return userDaoImpl.insert(user);
     }
 
     public void delete(int id) {
-        userDao.deleteOne(id);
+        userDaoImpl.deleteOne(id);
     }
 
     public void update(User user) {
-        userDao.update(user);
+        userDaoImpl.update(user);
     }
 
     public User select(int id) {
-        return userDao.selectOne(id);
+        return userDaoImpl.selectOne(id);
     }
 
     public List<User> selectAll() {
-        return userDao.selectAll();
+        return userDaoImpl.selectAll();
     }
 
     public User loginCheck(User user) {
-        return userDao.loginSelect(user);
+        return userDaoImpl.loginSelect(user);
     }
 }

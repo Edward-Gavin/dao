@@ -1,13 +1,18 @@
 package com.xiaokea.controller;
 
 
+import com.xiaokea.dao.IUserDao;
 import com.xiaokea.domain.User;
-import com.xiaokea.service.Impl.UserServiceImpl;
-import com.xiaokea.util.SSMUtil;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 
 
@@ -43,16 +48,21 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/doLogin")
-    public String doLogin(User user, HttpSession sess){
+    public String doLogin(User user, HttpSession sess) throws IOException {
         String name = user.getName();
-        System.out.println(name);
         String password = user.getPassword();
-        System.out.println(password);
+
+        // 获取Mybatis持久层链接及查询数据操作
+        InputStream in = Resources.getResourceAsStream("mybatis-conf.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(in);
+        SqlSession sqlSession = factory.openSession();
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+
         if(!name.equals("") && !password.equals("")){
-            UserServiceImpl userService = (UserServiceImpl) SSMUtil.getAC().getBean("userServiceImpl");
-            System.out.println(userService);
-            User user1 = userService.loginCheck(user);
+            //UserServiceImpl userService = (UserServiceImpl) SSMUtil.getAC().getBean("userServiceImpl");
+            User user1 = userDao.selectByUser(user);
             System.out.println("abc");
+            System.out.println(user1);
             if(user1 != null){
                 sess.setAttribute("user", user1);
                 return "redirect:/admin.jsp";
@@ -72,22 +82,34 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/doReg")
-    public String doReg(User user, HttpSession sess){
-        System.out.println(user.getName());
-        System.out.println(user.getPassword());
-        user.setRegtime(new Date().toString());
-        UserServiceImpl userService = (UserServiceImpl)SSMUtil.getAC().getBean("userServiceImpl");
+    public String doReg(User user, HttpSession sess) throws IOException {
+        user.setRegtime(new Date().toLocaleString());
+        //UserServiceImpl userService = (UserServiceImpl)SSMUtil.getAC().getBean("userServiceImpl");
+        InputStream in = Resources.getResourceAsStream("mybatis-conf.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(in);
+
+        SqlSession sqlSession = factory.openSession();
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+
         try{
-            userService.insert(user);
+            User fromDataBase = userDao.selectByName(user.getName());
+            System.out.println(fromDataBase);
+            if (fromDataBase != null) {
+                sess.setAttribute("wareReg","账号" + user.getName() + "已存在！请选择其他用户名！");
+                return "redirect:/reg.jsp";
+            }
+            userDao.insert(user);
+            sqlSession.commit();
+            sqlSession.close();
+            in.close();
             sess.setAttribute("user", user);
             return "redirect:/admin.jsp";
         }catch (Exception e){
             System.out.println(e);
-            sess.setAttribute("warn", "账号" + user.getName() + "已存在！请选择其他用户名！");
+            sess.setAttribute("warnReg", "未知异常");
             return "redirect:/reg.jsp";
         }
     }
-
     /**
      * 退出登录
      * @param sess
