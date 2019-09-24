@@ -38,7 +38,7 @@ public class IndexController {
      */
     @RequestMapping("/toReg")
     public String toReg(){
-        return "redirect:/reg.jsp";
+        return "redirect:/index.jsp";
     }
 
     /**
@@ -96,7 +96,7 @@ public class IndexController {
             System.out.println(fromDataBase);
             if (fromDataBase != null) {
                 sess.setAttribute("wareReg","账号" + user.getName() + "已存在！请选择其他用户名！");
-                return "redirect:/reg.jsp";
+                return "redirect:/index.jsp";
             }
             userDao.insert(user);
             sqlSession.commit();
@@ -107,7 +107,7 @@ public class IndexController {
         }catch (Exception e){
             System.out.println(e);
             sess.setAttribute("warnReg", "未知异常");
-            return "redirect:/reg.jsp";
+            return "redirect:/index.jsp";
         }
     }
     /**
