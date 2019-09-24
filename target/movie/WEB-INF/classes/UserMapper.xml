@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaokea.dao.BaseDao">
+    <!-- 查 -->
+    <select id="select" parameterType="int" resultType="_user">
+      select * from user where uid = #{uid}
+    </select>
+
+    <select id="selectAll" resultType="_user">
+        select * from user
+    </select>
+
+    <select id="loginSelect" parameterType="_user" resultType="_user">
+        select * from user where name = #{name} and password = #{password}
+    </select>
+
+    <!-- 改 -->
+    <update id="update" parameterType="_user">
+        update user
+        <set>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name}</if>
+            <if test="regtime != null">regtime = #{regtime}</if>
+        </set>
+        where uid = #{uid}
+    </update>
+
+    <!-- 增 -->
+    <insert id="insert" parameterType="_user">
+        insert into user(name, password, regtime) values(#{name}, #{password}, #{regtime})
+    </insert>
+
+    <!-- 删 -->
+    <delete id="delete" parameterType="int">
+        delete from user where uid = #{uid}
+    </delete>
+
+    <delete id="deleteAll">
+        delete from user;
+    </delete>
+
+</mapper>
