@@ -13,7 +13,9 @@ public interface IUserDao {
     @Insert("insert into user(uid, name, password, regtime) values (#{uid}, #{name}, #{password}, #{regtime})")
     int insert(User user);
 
-    void deleteOne(int id);
+    void deleteById(int id);
+
+    void deleteByName(String name);
 
     void update(User user);
 
@@ -28,4 +30,7 @@ public interface IUserDao {
 
     @Select("select * from user")
     List<User> selectAll();
+
+    @Select("select * from user where name like '%${value}%' ")
+    List<User> selectByMName(String name);
 }

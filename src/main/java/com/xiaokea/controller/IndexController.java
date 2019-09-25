@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 
+
 /**
  * @Author: Edward Gavin
  * @Create: 2019-09-24 10:50
@@ -50,7 +51,9 @@ public class IndexController {
     @RequestMapping("/doLogin")
     public String doLogin(User user, HttpSession sess) throws IOException {
         String name = user.getName();
+        System.out.println(name);
         String password = user.getPassword();
+        System.out.println(password);
 
         // 获取Mybatis持久层链接及查询数据操作
         InputStream in = Resources.getResourceAsStream("mybatis-conf.xml");

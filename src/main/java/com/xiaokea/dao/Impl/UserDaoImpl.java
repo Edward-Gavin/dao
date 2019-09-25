@@ -40,6 +40,16 @@ public class UserDaoImpl extends SqlSessionDaoSupport implements IUserDao {
         return getSqlSession().insert("user.insert", user);
     }
 
+    @Override
+    public void deleteById(int id) {
+
+    }
+
+    @Override
+    public void deleteByName(String name) {
+
+    }
+
     public void deleteOne(int uid) {
         getSqlSession().delete("user.delete", uid);
     }
@@ -54,6 +64,11 @@ public class UserDaoImpl extends SqlSessionDaoSupport implements IUserDao {
 
     public List<User> selectAll() {
         return getSqlSession().selectList("user.selectAll");
+    }
+
+    @Override
+    public List<User> selectByMName(String name) {
+        return getSqlSession().selectList("user.seleceByMName", name);
     }
 
     public User loginSelect(User user){
