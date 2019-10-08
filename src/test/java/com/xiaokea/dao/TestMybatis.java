@@ -60,7 +60,8 @@ public class TestMybatis {
         user.setPassword("123456");
         List<User> userList = userDao.selectAll();
         for (User user1 : userList) {
-            System.out.println(user1);
+            System.out.println(user1.getName());
+            System.out.println(user1.getPassword());
         }
     }
 

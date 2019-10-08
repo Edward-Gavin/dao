@@ -25,7 +25,6 @@
             </dataSource>
         </environment>
     </environments>
-
     <!-- 指定带有注解的Dao接口的位置 -->
     <mappers>
         <package name="com.xiaokea.dao"></package>
